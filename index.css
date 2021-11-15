@@ -1,0 +1,754 @@
+/* ---------------------- */
+/* Custom Properties */
+/* ---------------------- */
+
+:root {
+    /* colors */
+    /*hsl(230 35% 7%) , modern css property, no comma need, remove hsl() to manipulate alpha values easily*/
+    --clr-dark: 230 35% 7%;   
+    --clr-light: 231 77% 90%;
+    --clr-white: 0 0% 100%;
+
+    /* fonts-sizes*/
+    --fs-900: clamp(5rem, 8vw + 1rem, 9.375rem); /*clamp allow us to set the minimum size, the middle value, and maximum*/
+    --fs-800: 3.5rem;
+    --fs-700: 1.5rem;
+    --fs-600: 1rem;
+    --fs-500: 1rem
+    --fs-400: 0.9375rem;
+    --fs-300: 1rem;
+    --fs-200: 0.875rem;
+    /* to get rem value, divided by 16 to px vaule (eg. 400normal = 18px = 18/16 = 1.125rem) */
+
+    /* font-families */
+    --ff-serif: "Bellefair", serif;
+    --ff-sans-cond: "Barlow Condensed", sans-serif;
+    --ff-sans-normal: "Barlow", sans-serif;
+
+} 
+
+@media (min-width: 35em) {   /*Tablet*/
+    :root{
+    /* font sizes */
+    --fs-800: 5rem;
+    --fs-700: 2.5rem;
+    --fs-600: 1.5rem;
+    --fs-500: 1.25rem; /*20px/16*/
+    --fs-400: 1rem;
+    }
+}
+
+@media (min-width: 45em) {
+    :root{
+    /* font sizes */
+    --fs-800: 6.25rem;
+    --fs-700: 3.5rem;
+    --fs-600: 2rem;
+    --fs-500: 1.75rem;
+    --fs-400: 1.125rem;
+    }
+}
+
+
+/* ---------------------- */
+/* General Reset */
+/* ---------------------- */
+ 
+/* Reference - https://piccalil.li/blog/a-modern-css-reset/ */
+
+
+/* Box Sizing */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+
+/* Reset Margins */
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+p,
+figure,
+picture {
+    margin: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+    font-weight: 400;
+}
+
+/* Set up the body */
+body {
+    font-family: var(--ff-sans-normal);
+    font-size: var(--fs-400);
+    color: hsl(var(--clr-white));
+    background-color: hsl(var(--clr-dark));
+    line-height: 1.5;
+    min-height: 100vh;
+
+    display: grid;  /*to make our gird-container stretch the entire body height*/
+    grid-template-rows: min-content 1fr; /*min-content = our content to the top , auto 1fr for the bottom space */
+
+    overflow-x: hidden;
+}
+
+/* Make images easier to work with */
+img,
+picture {
+    max-width: 100%;
+    display: block;         /*for some spacing issues, life is too short for that weird gap you get at the bottom, and realistically, images—especially with work I do—tend to behave like blocks. */
+}
+
+
+/* Make form elements easier to work with */
+input,
+button,
+textarea,
+select {
+    font: inherit;     /* No more tiny (mono, in some cases) text! */
+}
+
+
+/* Remove animation for people who've turned them off */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+
+
+
+
+/* ---------------------- */
+/* Utility Classes */
+/* ---------------------- */
+
+/*   - Do one thing and doing very well
+     - Often only have one declaration, but they can have multiple when required
+     - Allow things to much more modular, and allow us to write a lot less in long run
+*/
+
+/*  --------Utility Classes : General------------ */
+.flex {
+    display: flex;
+    gap: var(--gap, 1rem);    /*it's going to allow us the use of custom properties, for really easily tweet it when we're settiing up our differnt utilities like Naviagetion or other things where we need to use flex/grid*/
+}
+
+.grid {
+    display: grid;
+    gap: var(--gap, 1rem);
+}
+
+.d-block{
+    display: block;  /*if something doing only in one thing its usually a good idea, just to turn that into utility class, so u can use it on other places if u need to*/ 
+}
+
+/* For spacing */
+.flow > *:where(:not(:first-child)){
+    margin-top: var(--flow-space, 1rem); /*undefined custom property*/
+    /* outline: 1px solid red; */
+} /* +   is the adjcent sibling combinator, so its  looking for ele it has adjcent sibiling before it 
+    :not(:first-child),  select anything thats not the first child  */
+
+.flow--space-small{
+    --flow-space: .75rem;
+}
+
+.container {
+    padding-inline: 2em;   /*modern css property (default- padding: 0 2em)*/
+    margin-inline: auto;   /*align center*/
+    max-width: 80rem;      /*not too worry, have to modify later*/
+}
+
+
+
+
+
+
+/*Super useful(screen-reader-only) common utility class, visiting the page visualily
+the class .sr-only is used to visually hide the information used for screen readers only. 
+But not only to hide labels. You might consider hiding various other elements such as "skip to main content" link, 
+icons which have an alternative texts etc.*/
+.sr-only{
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;   /*added line*/
+    border: 0;
+}
+
+/* For Accessibility, skip directly to the Explore button when it's focus and Tap (for keyboard user) */
+.skip-to-content {
+    position: absolute;
+    z-index: 9999;
+    padding: .5rem 1rem;
+    align-items: center;
+    color: hsl(var(--clr-white));
+    background: hsl(var(--clr-white) / .5);
+    text-decoration: none;
+    margin-inline: auto;
+    transform: translateY(-100%);
+    transition: transform 250ms ease-in-out;
+}
+.skip-to-content:focus{
+    transform: translateY(0);
+}
+
+/* -----------General Reset is done----------------- */
+
+
+/* ----------------Utility Classes: Color------------------- */
+
+.bg-dark{ background-color: hsl(var(--clr-dark));}
+.bg-accent{ background-color: hsl(var(--clr-light));}
+.bg-white{ background-color: hsl(var(--clr-white));}
+
+.text-dark{ color: hsl(var(--clr-dark));}
+.text-accent{ color: hsl(var(--clr-light));}
+.text-white{ color: hsl(var(--clr-white));}
+
+/* ----------------Utility Classes: Typography--------------- */
+
+.ff-serif{font-family: var(--ff-serif);}
+.ff-sans-cond{font-family: var(--ff-sans-cond);}
+.ff-sans-normal{font-family: var(--ff-sans-normal);}
+
+.letter-spacing-1{letter-spacing: 4.75px;}
+.letter-spacing-2{letter-spacing: 2.7px;}
+.letter-spacing-3{letter-spacing: 2.35px;}
+
+.uppercase{text-transform: uppercase;}
+
+.fs-900{font-size: var(--fs-900);}
+.fs-800{font-size: var(--fs-800);}
+.fs-700{font-size: var(--fs-700);}
+.fs-600{font-size: var(--fs-600);}
+.fs-500{font-size: var(--fs-500);}
+.fs-400{font-size: var(--fs-400);}
+.fs-300{font-size: var(--fs-300);}
+.fs-200{font-size: var(--fs-200);}
+
+.fs-900,
+.fs-800,
+.fs-700,
+.fs-600{
+    line-height: 1.1;
+}
+
+.numbered-title {
+    font-size: var(--fs-500);
+    font-family: var(--ff-sans-cond);
+    text-transform: uppercase;
+    letter-spacing: 4.72px;
+}
+
+.numbered-title span {
+    margin-right: .5em;
+    font-weight: 700;
+    color: hsl(var(--clr-white) /.25);
+}
+
+/* ---------------------- */
+/* Components             */
+/* ---------------------- */
+
+.large-button {
+    position: relative;
+    font-size: 2rem;
+    /*display: grid;  (or often) display:inline-block, cauz we are working with inline element <a> 
+    if u just set only display:grid, the grid is in inner-display-value, the-outer-display-value becomes block,
+    because of the block level element is growing to fix the space automaticly, the button will grow along with space.
+    We don't want that big button, so use inline-grid*/
+    display: inline-grid; /*inline element on the outside, gird element on the inside*/
+    place-items: center;
+    padding: 0 2em;
+    z-index: 1;
+    border-radius: 50%;
+    aspect-ratio: 1;  /*modern css, normal = width:100px height:100px,  if aspect-ratio: 1 / 2 means width1 height2 */
+    text-decoration: none;
+}
+
+/* Way of Decorating elements with pseudo element*/
+.large-button::after{
+    content: '';  /* whenever we have pseudo element, the first thing we need is 'content' property. without it, u won't have pseudo element*/
+    position: absolute;  /* depends on upper element which doesn't have static position(eg.ele with position:relative) */
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background: hsl(var(--clr-white) /.15);
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 500ms linear, transform 750ms ease-in-out;
+}
+
+.large-button:hover::after,
+.large-button:focus::after{
+    opacity: 1;
+    transform: scale(1.5);
+}
+
+/*---- primary-header --------- */
+
+.logo {
+    margin: 1.5rem clamp(1.5rem, 5vw, 3.5rem);
+}
+
+.primary-header {
+    justify-content: space-between;
+    align-items: center;
+}
+
+.primary-navigation {
+    --gap: clamp(1.5rem, 5vw, 3.5rem);   
+    --underline-gap: 2rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    background: hsl(var(--clr-dark) / 0.95);  /*if the browser doesn't support blur effect, just try contrast*/
+    /* backdrop-filter: blur(1.5rem); */
+
+}
+
+
+.primary-navigation a {
+    text-decoration: none;
+}
+.primary-navigation a > span{
+    font-weight: 700;
+    margin-right: .5em;
+}
+
+.mobile-nav-toggle{
+    display: none;
+}
+
+
+@supports (backdrop-filter: blur(1rem)){  /*if the browser support blur effect*/
+    .primary-navigation{
+        background: hsl(var(--clr-white) / 0.05);
+        backdrop-filter: blur(1.5rem);
+    }
+}
+
+@media (max-width: 35em){    /*max-width only for this mobile size*/
+
+    .primary-navigation{
+        --underline-gap: .5rem;  /* remove space between each one*/
+        position: fixed;
+        inset: 0 0 0 30%;  /*modern css property which is shorthand for top,right,bottom,left*/
+        z-index: 1000;
+        list-style: none;
+        padding: min(20rem, 15vh) 2rem;
+        margin: 0;
+        flex-direction: column;
+        transform: translateX(100%); /*it moves the nav 100% off to the right side, it overflows and we can't see, so go to 'body' and overflowx: hidden to avoid */
+        transition: transform 400ms ease-in-out;
+    }
+
+    .primary-navigation.underline-indicators .active{
+        border: 0;
+    }
+
+    .primary-navigation[data-visible="true"]{        
+        transform: translateX(0);
+        /* transition: transform 250ms ease-in-out; */
+    }
+
+    .mobile-nav-toggle {
+        display: block;
+        position: absolute;
+        z-index: 2000;
+        right: 1rem;
+        top: 2rem;
+        background: transparent;
+        background-image: url(./assets/shared/icon-hamburger.svg);
+        background-repeat: no-repeat;
+        width: 1.5rem;
+        aspect-ratio: 1 ;
+        border: 0;
+    }
+
+    .mobile-nav-toggle[aria-expanded="true"]{
+        background-image: url(./assets/shared/icon-close.svg);
+    
+    }
+
+    .mobile-nav-toggle:focus-visible {
+        outline: 5px solid white;
+        outline-offset: 5px;
+    }
+}
+
+@media (min-width:35em){
+    .primary-navigation{
+        padding-inline: clamp(3rem, 7vw, 7rem);
+    }
+}
+
+@media (min-width:35em) and (max-width:44.999em){
+    
+     .primary-navigation a>span{
+         display: none;
+     }
+}
+
+@media (min-width:45rem){
+
+    .primary-header::after{       /*Adding a line right after logo, since it is flex child, it will grow and shrink*/
+        content:'';
+        display: block;
+        position: relative;   /*important to keep the line in the flex*/
+        height: 1px;
+        width: 100%;
+        background: hsl(var(--clr-white) / .25);
+        order: 1;    /*don't normally use*/
+        margin-right: -2.5rem;
+    }
+
+    nav{
+        order: 2;
+    }
+
+    .primary-navigation{
+        margin-block: 2rem;  /*margin top,bottom just like padding-inline*/
+    }
+}
+
+/* Two underline indicators components */
+.underline-indicators > * {
+    cursor: pointer;
+    padding: var(--underline-gap, 1em) 0;
+    border: 0;
+    border-bottom: .2rem solid hsl(var(--clr-white) / 0);
+    background-color: transparent;
+}
+
+.underline-indicators *:hover,
+.underline-indicators *:focus{
+    border-color: hsl(var(--clr-white) / .25);;
+}
+
+.underline-indicators > .active,
+.underline-indicators > [aria-selected="true"]{
+    border-color: hsl(var(--clr-white) / 1);;
+}
+
+.tab-list{
+    --gap: 2rem;
+}
+
+.dot-indicators *{
+    cursor: pointer;
+    border: 0;
+    border-radius: 50%;
+    aspect-ratio: 1;
+    padding: .5em;  /*larger size of circle*/
+    background-color: hsl(var(--clr-white) /.25);
+}
+
+.dot-indicators *:hover,
+.dot-indicators *:focus{
+    background-color: hsl(var(--clr-white) /.5);
+}
+
+.dot-indicators > .active,
+.dot-indicators > [aria-selected="true"]{
+    background-color: hsl(var(--clr-white) / 1);;
+}
+
+.number-indicators{
+    flex-direction: column;
+    
+}
+
+.number-indicators *{
+    border:0;
+    border-radius: 50%;
+    width: 2.5em;
+    height: 2.5em;
+    padding: .1em;
+    border: .1rem solid hsl(var(--clr-white) /.25);
+}
+
+.number-indicators *:hover,
+.number-indicators *:focus{
+    border: .1rem solid hsl(var(--clr-white) /.6);
+}
+
+.number-indicators > [aria-selected="true"]{
+    background: hsl(var(--clr-white) /1);
+    color: hsl(var(--clr-dark));
+}
+
+
+/* -------------------------------- */
+/* ---Page Specific Backgrounds--- */
+/* ------------------------------ */
+
+
+/* .body{
+    
+} */
+
+/* home */
+.home{
+    background-image: url(./assets/home/background-home-mobile.jpg);
+    background-size: cover; /*not to repeat*/
+    background-position: bottom center; /*not to crop image when screen biggers*/
+}
+
+@media (min-width: 35rem) {
+    .home{
+        background-position: center center;
+        background-image: url(./assets/home/background-home-tablet.jpg);
+    } 
+}
+
+@media (min-width: 45rem) {
+    .home{
+        background-image: url(./assets/home/background-home-desktop.jpg);
+    } 
+}
+
+
+/* destination */
+.destination{
+    background-image: url(./assets/destination/background-destination-mobile.jpg);
+    background-size: cover; /*not to repeat*/
+    background-position: bottom center; /*not to crop image when screen biggers*/
+}
+
+@media (min-width: 35rem) {
+    .destination{
+        background-position: center center;
+        background-image: url(./assets/destination/background-destination-tablet.jpg);
+    } 
+}
+
+@media (min-width: 45rem) {
+    .destination{
+        background-image: url(./assets/destination/background-destination-desktop.jpg);
+    } 
+}
+
+/* crew */
+.crew{
+    background-image: url(./assets/crew/background-crew-mobile.jpg);
+    background-size: cover; /*not to repeat*/
+    background-position: bottom center; /*not to crop image when screen biggers*/
+}
+
+@media (min-width: 35rem) {
+    .crew{
+        background-position: center center;
+        background-image: url(./assets/crew/background-crew-tablet.jpg);
+    } 
+}
+
+@media (min-width: 45rem) {
+    .crew{
+        background-image: url(./assets/crew/background-crew-desktop.jpg);
+    } 
+}
+
+
+/* -------------------------------- */
+/* --- Layout -------------------- */
+/* ------------------------------ */
+
+
+.grid-container {
+    /* border: 2px solid lightblue; */
+    text-align: center;
+    /* border: 2px solid limegreen; */
+    display: grid;
+    /* column-gap: var(--container-gap, 1rem);
+    grid-template-columns: minmax(2rem, 1fr) repeat(2,minmax(0,40rem)) minmax(2rem,1fr); 1fr = take a vailable space as needed*/
+    place-items: center;
+    padding-inline: 1rem;
+    padding-bottom: 3rem;
+    
+}
+/* .grid-container--home{
+    margin-top: 2rem;
+} */
+
+.grid-container p:not([class]) {
+    max-width: 50ch; /*setting the width of the paragraph*/
+}
+
+.numbered-title {
+    grid-area: title;
+}
+
+/* destination layout */
+.grid-container--destination{
+    --flow-space: 2rem;
+    grid-template-areas: 
+    'title'
+    'image'
+    'tabs'
+    'content';
+}
+
+.grid-container--destination > .tab-list {
+    grid-area: tabs;
+}
+
+.grid-container--destination > picture {
+    grid-area: image;
+    max-width: 60%;
+}
+
+.grid-container--destination > .destination-info {
+    grid-area: content;
+}
+
+.destination-meta {
+    flex-direction: column;
+    border-top: 1px solid hsl(var(--clr-white) / .1);
+    margin-top: 2.5rem;
+    padding-top: 2.5rem;
+}
+
+.destination-meta p {
+    font-size: 1.75rem;
+}
+
+/* crew layout */
+.grid-container--crew{
+    --flow-space: 2rem;
+    grid-template-areas: 
+    'title'
+    'image'
+    'dots'
+    'details';
+}
+
+
+.grid-container--crew > picture {
+    grid-area: image;
+    max-width: 60%;
+    border-bottom: 1px solid hsl(var(--clr-white) / .1);
+}
+
+.grid-container--crew > .dot-indicators {
+    /* border: 1px solid green; */
+    grid-area: dots;
+}
+
+.grid-container--crew > .crew-details {
+    /* border: 1px solid green; */
+    grid-area: details;
+}
+
+.crew-details h2{
+    color: hsl(var(--clr-white) / .5);
+}
+
+
+@media (min-width:35em){
+    .numbered-title{
+        justify-self: start;  /*can't do text-align:left, b/c its in grid and aligned center*/
+        margin-top: 2rem;
+    }
+    .destination-meta{
+        flex-direction: row;
+        justify-content: space-evenly;
+    }
+
+    .grid-container--crew{
+        padding-bottom: 0;
+        /* --flow-space: 2rem; */
+        grid-template-areas: 
+        'title'
+        'details'
+        'dots'
+        'image';
+    }
+}
+
+@media (min-width: 45rem){     /*large screen size*/
+    .grid-container{
+    text-align: left;
+    column-gap: var(--container-gap, 2rem);
+    grid-template-columns: minmax(1rem, 1fr) repeat(2,minmax(0,40rem)) minmax(1rem,1fr);
+    }
+
+    .grid-container--home {
+        padding-bottom: max(6rem, 20vh); /*will take the larger value*/
+        align-items: end;
+    }
+    .grid-container--home > *:first-child{
+        /* background-color: pink; */
+        grid-column: 2;
+    }
+    .grid-container--home > *:last-child{
+        /* background-color: lightblue; */
+        grid-column: 3;
+    }
+    
+
+    .grid-container--destination{
+        justify-items: start;
+        align-content: start;   /*just in case, for bigger screen than ours*/
+        grid-template-areas: 
+        '. title title .'
+        '. image tabs .'
+        '. image content .';
+    }
+    .grid-container--destination > picture,
+    .grid-container--crew > picture {
+        max-width: 90%;   /*don't be too small*/
+    }
+
+    .destination-meta {
+        --gap: min(6vw,6rem);
+        justify-content: start;
+    }
+
+    .grid-container--crew{
+        justify-items: start;
+        /* border: 1px solid green; */
+        /* --flow-space: 2rem; */
+        grid-template-areas: 
+        '. title title .'
+        '. details image .'
+        '. dots image .';
+    }
+
+    .grid-container--crew > .dot-indicators{
+        justify-self: start;
+        /* margin-left:3rem; */
+    }
+
+    .grid-container--crew > picture{
+        align-self: end;
+    }
+    
+    /* undefined, just my own solution to fix alignment */
+    /* .grid-container--crew > .numbered-title{
+        margin-left:3rem;
+    } */
+}
